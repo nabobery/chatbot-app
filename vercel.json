@@ -1,0 +1,26 @@
+{
+    "version": 2,
+    "projects": [
+      {
+        "name": "frontend",
+        "src": "frontend/package.json",
+        "use": "@vercel/next"
+      },
+      {
+        "name": "backend",
+        "src": "backend/main.py",
+        "use": "@vercel/python",
+        "config": { "maxLambdaSize": "15mb" }
+      }
+    ],
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "backend/main.py"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "frontend/$1"
+      }
+    ]
+  }
