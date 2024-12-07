@@ -6,11 +6,8 @@ import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Plus, Loader2 } from 'lucide-react'
 import { api } from '@/lib/api'
+import Thread from '@/types/Thread'
 
-interface Thread {
-  id: number
-  title: string
-}
 
 interface ThreadListProps {
   selectedThread: Thread | null

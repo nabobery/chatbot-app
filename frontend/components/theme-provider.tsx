@@ -1,7 +1,5 @@
 'use client';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useStore } from 'zustand';
-import { clsx } from 'clsx';
 
 interface ThemeProviderProps {
   children: ReactNode;
@@ -13,6 +11,7 @@ interface ThemeProviderProps {
 interface ThemeState {
   theme: string;
   setTheme: (theme: string) => void;
+  enableSystem: boolean
 }
 
 const ThemeContext = createContext<ThemeState | undefined>(undefined);
@@ -26,7 +25,7 @@ export const ThemeProvider = ({ children, attribute, defaultTheme, enableSystem 
   }, [theme, attribute]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, enableSystem }}>
       {children}
     </ThemeContext.Provider>
   );
