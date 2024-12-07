@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   build-and-deploy:
@@ -26,35 +26,21 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build and push backend image
+      - name: Build and push combined image
         uses: docker/build-push-action@v4
         with:
-          context: ./backend
-          file: ./backend/DockerFile
+          context: ./
+          file: ./Dockerfile
           push: true
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/backend:latest
-
-      - name: Build and push frontend image
-        uses: docker/build-push-action@v4
-        with:
-          context: ./frontend
-          file: ./frontend/DockerFile
-          push: true
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/frontend:latest
+          tags: ${{ secrets.ACR_LOGIN_SERVER }}/combined:latest
 
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy Backend to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: chatbotappbackend
-          images: ${{ secrets.ACR_LOGIN_SERVER }}/backend:latest
-
-      - name: Deploy Frontend to Azure Web App
+      - name: Deploy Combined App to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: chatbotappfrontend
-          images: ${{ secrets.ACR_LOGIN_SERVER }}/frontend:latest
+          images: ${{ secrets.ACR_LOGIN_SERVER }}/combined:latest

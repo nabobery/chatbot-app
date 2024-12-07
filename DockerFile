@@ -1,0 +1,51 @@
+# Stage 1: Build the frontend application
+FROM node:18-alpine as frontend-builder
+
+# Set working directory
+WORKDIR /app/frontend
+
+# Install frontend dependencies
+COPY frontend/package.json ./ 
+RUN npm install -cf  
+
+# Copy frontend application code
+COPY frontend ./
+
+# Build the frontend application
+RUN npm run build
+
+# Stage 2: Build the backend application
+FROM python:3.11-slim as backend-builder
+
+# Set working directory
+WORKDIR /app/backend
+
+# Install build essentials (if needed for some packages)
+RUN apt-get update && apt-get install -y build-essential
+
+# Install backend dependencies
+COPY backend/requirements.txt . 
+RUN pip install --user -r requirements.txt
+
+# Copy backend application code
+COPY backend ./
+
+# Stage 3: Run the application
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy built frontend and installed backend packages from builders
+COPY --from=frontend-builder /app/frontend/build ./frontend
+COPY --from=backend-builder /root/.local /root/.local
+COPY --from=backend-builder /app/backend /app/backend
+
+# Update PATH
+ENV PATH=/root/.local/bin:$PATH
+
+# Expose ports
+EXPOSE 3000 8000
+
+# Command to run both applications
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port 8000 & serve -s frontend & wait"]
