@@ -31,12 +31,14 @@ export default function SignIn() {
         await api.googleAuth(token)
 
         // Fetch the current user
-        const userData = await api.getCurrentUser()
+        const userData = await api.getCurrentUser();
         setAuth(userData)
+
+        console.log(userData);
 
         toast({
           title: 'Successfully authenticated',
-          description: `Welcome back, ${userData.name}!`,
+          description: `Welcome back, ${userData?.name}!`,
           variant: 'default',
         })
 

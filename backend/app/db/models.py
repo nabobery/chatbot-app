@@ -46,3 +46,20 @@ class Message(Base):
     
     # Relationships
     thread = relationship("Thread", back_populates="messages")
+
+class WebSocketToken(Base):
+    __tablename__ = 'web_socket_tokens'
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(String, unique=True, index=True, nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+
+    user = relationship("User")
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "token": self.token,
+            "user_id": self.user_id,
+            "expires_at": self.expires_at,
+        }
