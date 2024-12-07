@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./backend
-          file: ./backend/Dockerfile
+          file: ./backend/DockerFile
           push: true
           tags: ${{ secrets.ACR_LOGIN_SERVER }}/backend:latest
 
@@ -38,7 +38,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./frontend
-          file: ./frontend/Dockerfile
+          file: ./frontend/DockerFile
           push: true
           tags: ${{ secrets.ACR_LOGIN_SERVER }}/frontend:latest
 
