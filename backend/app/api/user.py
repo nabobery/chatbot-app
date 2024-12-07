@@ -15,6 +15,8 @@ class UserResponse(BaseModel):
     email: str
     auth_provider: str
     threads_count: int
+    name: str
+    image_url: str
 
     class Config:
         from_attributes = True
@@ -30,7 +32,7 @@ async def get_current_user(
     db: Session = Depends(get_async_db)
 ):
     try:
-        print(user_id)
+        # print(user_id)
         user = await db.execute(select(User).filter(User.id == user_id))
         user = user.scalars().first()
         if not user:
@@ -47,8 +49,10 @@ async def get_current_user(
         return {
             "id": user.id,
             "email": user.email,
+            "name": user.name,
             "auth_provider": user.auth_provider.value,
-            "threads_count": threads_count
+            "threads_count": threads_count,
+            "image_url": user.image_url
         }
     
     except Exception as e:

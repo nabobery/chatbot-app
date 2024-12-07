@@ -4,12 +4,17 @@ from google.auth.transport import requests
 from ..core.config import settings
 from ..core.security import create_access_token, create_refresh_token, verify_token
 from ..db.session import get_async_db
-from ..db.models import User, AuthProvider
+from ..db.models import User, AuthProvider, WebSocketToken
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from pydantic import BaseModel
 from jose import JWTError, jwt
-from secrets import token_urlsafe
+from datetime import datetime, timedelta
+from uuid import uuid4
+import logging
+
+logger = logging.getLogger("auth")
+
 
 router = APIRouter()
 
@@ -116,10 +121,22 @@ async def logout(response: Response):
 ws_tokens = {}
 
 @router.post("/ws-token")
-async def generate_ws_token(request: Request, user_id: int = Depends(verify_token)):
+async def generate_ws_token(
+    db: AsyncSession = Depends(get_async_db),
+    user_id: int = Depends(verify_token)
+):
     try:
-        ws_token = token_urlsafe(16)
-        ws_tokens[ws_token] = user_id
-        return {"ws_token": ws_token}
+        token = str(uuid4())
+        expires_at = datetime.utcnow() + timedelta(minutes=5)  # Token valid for 5 minutes
+        ws_token = WebSocketToken(
+            token=token,
+            user_id=user_id,
+            expires_at=expires_at
+        )
+        db.add(ws_token)
+        await db.commit()
+        logger.info(f"Generated ws_token for user_id={user_id}: {token}")
+        return {"ws_token": token}
     except Exception as e:
+        logger.error(f"Failed to generate ws_token: {e}")
         raise HTTPException(status_code=500, detail=str(e))

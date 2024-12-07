@@ -30,8 +30,18 @@ CREATE TABLE IF NOT EXISTS messages (
     FOREIGN KEY (thread_id) REFERENCES threads(id) ON DELETE CASCADE
 );
 
+-- Create Web Socket Token Table
+CREATE TABLE IF NOT EXISTS web_socket_tokens (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    token VARCHAR(255) UNIQUE NOT NULL,
+    user_id INTEGER NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- Create Indexes
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_provider ON users(auth_provider, provider_user_id);
 CREATE INDEX IF NOT EXISTS idx_threads_user ON threads(user_id);
 CREATE INDEX IF NOT EXISTS idx_messages_thread ON messages(thread_id);
+CREATE INDEX IF NOT EXISTS idx_web_socket_tokens_token ON web_socket_tokens(token);

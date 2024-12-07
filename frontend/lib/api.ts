@@ -40,7 +40,7 @@ export const api = {
   async getCurrentUser(): Promise<User> {
     const res = await fetchWithRefresh(`${API_URL}/user/me`)
     if (!res.ok) throw new Error('Failed to fetch user')
-    return res.json()
+    return res.json();
   },
 
   async createThread(title: string) {
@@ -69,7 +69,7 @@ export const api = {
     return res.json()
   },
 
-  async getMessages(threadId: number) {
+  async getThreadMessages(threadId: number) {
     const res = await fetchWithRefresh(`${API_URL}/chat/threads/${threadId}/messages`)
     if (!res.ok) throw new Error('Failed to fetch messages')
     return res.json()
@@ -98,8 +98,11 @@ export const api = {
     const res = await fetch(`${API_URL}/auth/ws-token`, {
       method: 'POST',
       credentials: 'include',
-    })
-    if (!res.ok) throw new Error('Failed to fetch WebSocket token')
-    return res.json()
+    });
+    if (!res.ok) {
+      const errorDetail = await res.json();
+      throw new Error(errorDetail.detail || 'Failed to fetch WebSocket token');
+    }
+    return res.json();
   },
 }
