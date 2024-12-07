@@ -1,0 +1,35 @@
+# Ignore Python byte-compiled files and caches
+backend/__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+*.py,cover
+backend/.hypothesis/
+backend/.pytest_cache/
+backend/.coverage
+backend/.coverage.*
+backend/.mypy_cache/
+backend/.dmypy.json
+backend/dmypy.json
+backend/pyre/
+backend/.pytype/
+backend/cython_debug/
+backend/.pdm.toml
+backend/chatbot.db
+
+# Ignore Node.js dependencies and build artifacts
+frontend/node_modules
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+frontend/.next/
+frontend/out/
+frontend/build
+frontend/coverage
+
+# Ignore environment files
+.env*
