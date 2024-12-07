@@ -9,9 +9,11 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import UserProfile from '@/components/UserProfile';
 import { useRouter } from 'next/navigation';
+import Thread from '@/types/Thread';
+
 
 export default function HomePage() {
-  const [selectedThread, setSelectedThread] = useState(null);
+  const [selectedThread, setSelectedThread] = useState<Thread | null>(null);
   const [showProfile, setShowProfile] = useState(false);
   const auth = useAuth();
   const router = useRouter();

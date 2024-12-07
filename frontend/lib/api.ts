@@ -8,7 +8,7 @@ interface User {
   auth_provider: string
 }
 
-interface ThreadResponse {
+interface Thread {
   id: number
   title: string
   created_at: string
@@ -55,7 +55,7 @@ export const api = {
     return res.json()
   },
 
-  async getUserThreads(): Promise<ThreadResponse[]> {
+  async getUserThreads(): Promise<Thread[]> {
     const res = await fetchWithRefresh(`${API_URL}/chat/threads`)
     if (!res.ok) throw new Error('Failed to fetch threads')
     return res.json()
