@@ -2,12 +2,10 @@
     "version": 2,
     "builds": [
       {
-        "name": "frontend",
         "src": "frontend/package.json",
         "use": "@vercel/next"
       },
       {
-        "name": "backend",
         "src": "backend/main.py",
         "use": "@vercel/python",
         "config": { "maxLambdaSize": "15mb" }
